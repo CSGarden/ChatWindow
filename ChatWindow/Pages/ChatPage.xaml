@@ -1,0 +1,195 @@
+<!--  Copyright (c) Microsoft Corporation and Contributors.  -->
+<!--  Licensed under the MIT License.  -->
+
+<Page
+    x:Class="ChatWindow.Pages.ChatPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controlPages="using:ChatWindow.Models"
+    xmlns:converter="using:ChatWindow.Converters"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:ChatWindow.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:ChatWindow.Models"
+    xmlns:selector="using:ChatWindow.Selectors"
+    xmlns:viewmodel="using:ChatWindow.ViewModels"
+    xmlns:winui="using:CommunityToolkit.WinUI.UI.Controls"
+    x:Name="s"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Page.DataContext>
+        <viewmodel:ChatViewModel />
+    </Page.DataContext>
+    <Page.Resources>
+        <converter:BooleanReverseConverter x:Key="BooleanReverseConverter" />
+        <DataTemplate x:Key="chatInput">
+            <Grid>
+                <StackPanel
+                    x:Name="SendMsg"
+                    Margin="0,5"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <StackPanel Margin="5" Orientation="Vertical">
+                        <!--  消息内容  -->
+                        <Border
+                            MinWidth="50"
+                            MinHeight="30"
+                            MaxWidth="{Binding Path=ActualWidth, ElementName=borderWidth}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="#6495ED"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                            <TextBlock
+                                MinWidth="30"
+                                MaxWidth="500"
+                                Padding="25,9"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="customized TextBox"
+                                CharacterSpacing="120"
+                                FontFamily="Segoe UI"
+                                FontSize="14"
+                                Foreground="#000000"
+                                Style="{StaticResource DefaultTextBoxStyle}"
+                                Tapped="TextBlock_Tapped"
+                                Text="{Binding Message}"
+                                TextWrapping="Wrap">
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout>
+                                        <TextBlock x:Uid="TextBlockCopied" />
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                    <!--  头像  -->
+                    <Image
+                        Width="35"
+                        Height="35"
+                        Source="/Images/user.png" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="chatAiInput" x:DataType="model:UIMessage">
+            <StackPanel
+                x:Name="SendMsg"
+                Margin="0,12,20,0"
+                HorizontalAlignment="Left"
+                Orientation="Horizontal">
+                <!--  头像  -->
+                <Image
+                    Width="35"
+                    Height="35"
+                    Source="/Images/Chatgpt.ico" />
+                <StackPanel Margin="0,0,-9,0" Orientation="Vertical">
+                    <!--  消息内容  -->
+                    <Border
+                        MinWidth="50"
+                        MinHeight="30"
+                        MaxWidth="{Binding Path=ActualWidth, ElementName=borderWidth}"
+                        Margin="5,0"
+                        Background="#F5F5F5"
+                        BorderThickness="1"
+                        CornerRadius="8,8,8,8">
+                        <winui:MarkdownTextBlock
+                            MinWidth="30"
+                            MaxWidth="500"
+                            Padding="25,9"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="customized TextBox"
+                            Background="#cc36341f"
+                            CharacterSpacing="120"
+                            CodeBackground="Transparent"
+                            CodeFontFamily="宋体"
+                            CodeForeground="#fcc28c"
+                            FontFamily="Segoe UI"
+                            FontSize="14"
+                            Foreground="#95968d"
+                            InlineCodeForeground="Yellow"
+                            Tapped="TextBlock_Tapped"
+                            Text="{Binding Message}"
+                            TextWrapping="Wrap">
+                            <FlyoutBase.AttachedFlyout>
+                                <Flyout>
+                                    <TextBlock x:Uid="TextBlockCopied" />
+                                </Flyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </winui:MarkdownTextBlock>
+                    </Border>
+                </StackPanel>
+                <Button
+                    Height="30"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding SpeakCommand}"
+                    IsEnabled="{Binding BtnIsEnable}"
+                    Style="{StaticResource EllipsisButton}">
+                    <Image Source="/Images/yuyin.png" />
+                </Button>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+    <!--  内容控件显示  -->
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="auto" MinHeight="50" />
+            </Grid.RowDefinitions>
+            <ListView
+                Grid.Row="0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                BorderBrush="#D3D3D3"
+                BorderThickness="0,1,0,1"
+                ItemsSource="{Binding MessagesList}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectionMode="Extended">
+                <ListView.ItemTemplateSelector>
+                    <selector:ChatTemplateSelector AiInputTemplate="{StaticResource chatAiInput}" InputTemplate="{StaticResource chatInput}" />
+                </ListView.ItemTemplateSelector>
+            </ListView>
+            <Border Grid.Row="1" BorderThickness="0,1,0,0">
+                <Grid>
+                    <TextBox
+                        x:Name="input"
+                        x:Uid="ProblemInput"
+                        MinHeight="38"
+                        Margin="10,0,110,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        AcceptsReturn="False"
+                        CharacterSpacing="100"
+                        FontSize="14"
+                        Text="{Binding UserText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        TextWrapping="NoWrap">
+                        <i:Interaction.Behaviors>
+                            <i:BehaviorCollection>
+                                <core:EventTriggerBehavior EventName="KeyDown">
+                                    <core:InvokeCommandAction Command="{Binding MessageEnterSendCommand}" />
+                                </core:EventTriggerBehavior>
+                            </i:BehaviorCollection>
+                        </i:Interaction.Behaviors>
+
+                    </TextBox>
+                    <Button
+                        x:Name="sendBtn"
+                        x:Uid="SendBtn"
+                        Width="100"
+                        Height="40"
+                        Margin="0,10,5,10"
+                        Padding="22,9"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Command="{Binding MessageSendCommand}"
+                        FontSize="16"
+                        IsEnabled="{Binding ElementName=input, Path=Text.Length}"
+                        Style="{StaticResource AccentButtonStyle}" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>
