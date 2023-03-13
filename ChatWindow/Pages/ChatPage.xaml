@@ -25,53 +25,60 @@
     </Page.DataContext>
     <Page.Resources>
         <converter:BooleanReverseConverter x:Key="BooleanReverseConverter" />
-        <DataTemplate x:Key="chatInput">
+        <DataTemplate x:Key="chatInput" x:DataType="model:UIMessage">
             <Grid>
-                <StackPanel
-                    x:Name="SendMsg"
-                    Margin="0,5"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-                    <StackPanel Margin="5" Orientation="Vertical">
-                        <!--  消息内容  -->
-                        <Border
-                            MinWidth="50"
-                            MinHeight="30"
-                            MaxWidth="{Binding Path=ActualWidth, ElementName=borderWidth}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Background="#6495ED"
-                            BorderThickness="1"
-                            CornerRadius="8">
-                            <TextBlock
-                                MinWidth="30"
-                                MaxWidth="500"
-                                Padding="25,9"
+                <StackPanel Orientation="Vertical">
+                    <StackPanel
+                        x:Name="SendMsg"
+                        Margin="0,5,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <StackPanel Margin="5" Orientation="Vertical">
+                            <!--  消息内容  -->
+                            <Border
+                                MinWidth="50"
+                                MinHeight="30"
+                                MaxWidth="{Binding Path=ActualWidth, ElementName=borderWidth}"
+                                HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                AutomationProperties.Name="customized TextBox"
-                                CharacterSpacing="120"
-                                FontFamily="Segoe UI"
-                                FontSize="14"
-                                Foreground="#000000"
-                                Style="{StaticResource DefaultTextBoxStyle}"
-                                Tapped="TextBlock_Tapped"
-                                Text="{Binding Message}"
-                                TextWrapping="Wrap">
-                                <FlyoutBase.AttachedFlyout>
-                                    <Flyout>
-                                        <TextBlock x:Uid="TextBlockCopied" />
-                                    </Flyout>
-                                </FlyoutBase.AttachedFlyout>
-                            </TextBlock>
-                        </Border>
+                                Background="#6495ED"
+                                BorderThickness="1"
+                                CornerRadius="8">
+                                <TextBlock
+                                    MinWidth="30"
+                                    MaxWidth="500"
+                                    Padding="25,9"
+                                    VerticalAlignment="Center"
+                                    AutomationProperties.Name="customized TextBox"
+                                    CharacterSpacing="120"
+                                    FontFamily="Segoe UI"
+                                    FontSize="14"
+                                    Foreground="#000000"
+                                    Style="{StaticResource DefaultTextBoxStyle}"
+                                    Tapped="TextBlock_Tapped"
+                                    Text="{Binding Message}"
+                                    TextWrapping="Wrap">
+                                    <FlyoutBase.AttachedFlyout>
+                                        <Flyout>
+                                            <TextBlock x:Uid="TextBlockCopied" />
+                                        </Flyout>
+                                    </FlyoutBase.AttachedFlyout>
+                                </TextBlock>
+                            </Border>
+                        </StackPanel>
+                        <!--  头像  -->
+                        <Image
+                            Width="35"
+                            Height="35"
+                            Source="/Images/user.png" />
                     </StackPanel>
-                    <!--  头像  -->
-                    <Image
-                        Width="35"
-                        Height="35"
-                        Source="/Images/user.png" />
+                    <ProgressRing
+                        Background="Transparent"
+                        IsActive="True"
+                        Visibility="{Binding ProgressIsVisibility}" />
                 </StackPanel>
+
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="chatAiInput" x:DataType="model:UIMessage">
@@ -148,6 +155,18 @@
                 ItemsSource="{Binding MessagesList}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 SelectionMode="Extended">
+                <!--<ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="FocusVisualPrimaryThickness" Value="0" />
+                        <Setter Property="FocusVisualSecondaryThickness" Value="0" />
+                        <Setter Property="SelectedBackground" Value="Transparent" />
+                        <Setter Property="SelectedForeground" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
+                        <Setter Property="SelectedPointerOverBackground" Value="Transparent" />
+                        <Setter Property="SelectedPointerOverForeground" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
+                        <Setter Property="SelectedPressedBackground" Value="Transparent" />
+                        <Setter Property="SelectedPressedForeground" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
+                    </Style>
+                </ListView.ItemContainerStyle>-->
                 <ListView.ItemTemplateSelector>
                     <selector:ChatTemplateSelector AiInputTemplate="{StaticResource chatAiInput}" InputTemplate="{StaticResource chatInput}" />
                 </ListView.ItemTemplateSelector>

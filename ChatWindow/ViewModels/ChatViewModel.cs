@@ -30,8 +30,6 @@ namespace ChatWindow.ViewModels {
             if (args.Key == Windows.System.VirtualKey.Enter) {
                 OnSendAsync();
             }
-
-
         }
 
         private async Task OnSendAsync() {
@@ -43,7 +41,12 @@ namespace ChatWindow.ViewModels {
                 myMessage.Message = text;
                 myMessage.From = MessageType.Input;
                 MessagesList.Add(myMessage);
+                myMessage.ProgressIsVisibility = Visibility.Visible;
+               // myMessage.ProgressIsActive = true;
                 var result = await apiHelper.GetResults(text);
+                myMessage.ProgressIsVisibility = Visibility.Collapsed;
+                //myMessage.ProgressIsActive = false;
+
                 UIMessage AiMessage = new UIMessage();
                 AiMessage.Message = result;
                 AiMessage.From = MessageType.AiInput;
