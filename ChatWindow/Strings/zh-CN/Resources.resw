@@ -126,6 +126,9 @@
   <data name="SendBtn.Content" xml:space="preserve">
     <value>发送</value>
   </data>
+  <data name="SpeechInput.Content" xml:space="preserve">
+    <value>语音输入</value>
+  </data>
   <data name="TextBlockCopied.Text" xml:space="preserve">
     <value>复制成功</value>
   </data>

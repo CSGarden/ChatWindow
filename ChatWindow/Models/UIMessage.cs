@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Media.SpeechRecognition;
 using Windows.Media.SpeechSynthesis;
 
 namespace ChatWindow.Models {
@@ -39,7 +40,7 @@ namespace ChatWindow.Models {
                 var media = new MediaPlayer();
                 media.MediaEnded += Media_MediaEnded;
                 media.Source = MediaSource.CreateFromStream(stream, stream.ContentType);
-                media.PlaybackRate =1.2;
+                media.PlaybackRate =1.3;
                 media.Play();
             }
 
@@ -50,5 +51,7 @@ namespace ChatWindow.Models {
                 BtnIsEnable = true;
             });
         }
+
+       
     }
 }

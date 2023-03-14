@@ -172,12 +172,18 @@
                 </ListView.ItemTemplateSelector>
             </ListView>
             <Border Grid.Row="1" BorderThickness="0,1,0,0">
-                <Grid>
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
                     <TextBox
                         x:Name="input"
                         x:Uid="ProblemInput"
+                        Grid.Column="0"
                         MinHeight="38"
-                        Margin="10,0,110,0"
+                        Margin="10,0,10,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center"
                         AcceptsReturn="False"
@@ -192,11 +198,24 @@
                                 </core:EventTriggerBehavior>
                             </i:BehaviorCollection>
                         </i:Interaction.Behaviors>
-
                     </TextBox>
+                    <Button
+                        x:Uid="SpeechInput"
+                        Grid.Column="1"
+                        Height="40"
+                        MinWidth="100"
+                        Margin="0,0,10,0"
+                        Padding="10,5"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        CharacterSpacing="100"
+                        Command="{Binding SpeechRecognitionCommand}"
+                        FontSize="16"
+                        Style="{StaticResource AccentButtonStyle}" />
                     <Button
                         x:Name="sendBtn"
                         x:Uid="SendBtn"
+                        Grid.Column="2"
                         Width="100"
                         Height="40"
                         Margin="0,10,5,10"

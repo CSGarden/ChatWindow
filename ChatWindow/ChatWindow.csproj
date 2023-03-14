@@ -42,6 +42,7 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230118.102" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
     <PackageReference Include="System.Net.Http.Json" Version="8.0.0-preview.1.23110.8" />
+    <PackageReference Include="System.Speech" Version="8.0.0-preview.1.23110.8" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
