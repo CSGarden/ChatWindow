@@ -14,7 +14,7 @@ using Windows.UI.Core;
 namespace ChatWindow.ViewModels {
     public partial class ChatViewModel : ObservableObject {
         public ChatViewModel() {
-             this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+            this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
             this.speechRecognizer = new SpeechRecognizer();
             speechRecognizer.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
         }
