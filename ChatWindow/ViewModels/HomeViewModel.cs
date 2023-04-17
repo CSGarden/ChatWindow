@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatWindow.ViewModels {
-    public partial class HomeViewModel: ObservableObject {
+    public partial class HomeViewModel : ObservableObject {
         [ObservableProperty]
         private ObservableCollection<UIMessage> messagesList = new ObservableCollection<UIMessage>();
         [ObservableProperty]
@@ -25,11 +25,11 @@ namespace ChatWindow.ViewModels {
             myMessage.Message = text;
             myMessage.From = MessageType.Input;
             MessagesList.Add(myMessage);
-            var result = await apiHelper.GetResults(text);
             UIMessage AiMessage = new UIMessage();
-            AiMessage.Message = result;
             AiMessage.From = MessageType.AiInput;
             MessagesList.Add(AiMessage);
+            var result = await apiHelper.GetStreamResult(text, new Action<string>((e) => { AiMessage.Message += e; }));
+            AiMessage.Message = result;
         }
     }
 }

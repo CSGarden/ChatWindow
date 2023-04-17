@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.SpeechRecognition;
@@ -49,15 +50,15 @@ namespace ChatWindow.ViewModels {
                 myMessage.From = MessageType.Input;
                 MessagesList.Add(myMessage);
                 myMessage.ProgressIsVisibility = Visibility.Visible;
-                // myMessage.ProgressIsActive = true;
-                var result = await apiHelper.GetResults(text);
-                myMessage.ProgressIsVisibility = Visibility.Collapsed;
-                //myMessage.ProgressIsActive = false;
-
                 UIMessage AiMessage = new UIMessage();
-                AiMessage.Message = result;
                 AiMessage.From = MessageType.AiInput;
                 MessagesList.Add(AiMessage);
+                // myMessage.ProgressIsActive = true;
+                var result = await apiHelper.GetStreamResult(text, new Action<string>((e) => { AiMessage.Message += e; }));
+                myMessage.ProgressIsVisibility = Visibility.Collapsed;
+                //myMessage.ProgressIsActive = false;
+                AiMessage.Message = result;
+                
             }
         }
 
