@@ -14,7 +14,7 @@ namespace ChatWindow.Helper {
         }
         public async Task<string> GetResults(string inputText) {
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", "wxo20k7zpw293rjbr");
+            client.DefaultRequestHeaders.Add("X-API-KEY", "你的key");
             var form = new MultipartFormDataContent();
             form.Add(new StringContent(inputText), "prompt");
             form.Add(new StringContent("1"), "sync");
