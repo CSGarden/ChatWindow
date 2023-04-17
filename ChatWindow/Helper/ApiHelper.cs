@@ -19,7 +19,7 @@ namespace ChatWindow.Helper {
             form.Add(new StringContent(inputText), "prompt");
             form.Add(new StringContent("1"), "sync");
             try {
-                var response = await client.PostAsync("https://aw.aoscdn.com/tech/tasks/gpt/completion", form);
+                var response = await client.PostAsync("接口", form);
                 var result = await response.Content.ReadFromJsonAsync<ApowersoftResult>();
                 return result.data.text;
             } catch (System.Exception) {
