@@ -13,11 +13,10 @@ using Windows.UI.Core;
 
 namespace ChatWindow.ViewModels {
     public partial class ChatViewModel : ObservableObject {
-        public ChatViewModel() {
-            this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-            this.speechRecognizer = new SpeechRecognizer();
-            speechRecognizer.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
-        }
+        //public ChatViewModel() {
+        //    // this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+        //    this.speechRecognizer = new SpeechRecognizer();
+        //}
 
         private SpeechRecognizer speechRecognizer;
         private StringBuilder dictatedTextBuilder;
@@ -66,7 +65,7 @@ namespace ChatWindow.ViewModels {
         private async Task SpeechRecognitionAsync() {
             string Result = "";
             try {
-                #region 第一种短语输入
+                #region 第一种语音输入
                 //using (SpeechRecognizer recognizer = new SpeechRecognizer()) {
                 //    SpeechRecognitionCompilationResult compilationResult = await recognizer.CompileConstraintsAsync();
                 //    recognizer.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
@@ -86,21 +85,24 @@ namespace ChatWindow.ViewModels {
                 #endregion
 
                 #region 第二种方式
-                SpeechRecognitionCompilationResult result = await speechRecognizer.CompileConstraintsAsync();
-                if (result.Status == SpeechRecognitionResultStatus.Success) {
-                    speechRecognizer.UIOptions.IsReadBackEnabled = false;
-                    speechRecognizer.UIOptions.ShowConfirmation = false;
-                    speechRecognizer.UIOptions.AudiblePrompt = "我在听,请说...";
-                    SpeechRecognitionResult recognitionResult = await speechRecognizer.RecognizeWithUIAsync();
-                    if (recognitionResult.Status == SpeechRecognitionResultStatus.Success) {
-                        Result = recognitionResult.Text;
-                    }
+                SpeechRecognitionCompilationResult result =
+      await speechRecognizer.CompileConstraintsAsync();
+                speechRecognizer.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
+                speechRecognizer.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
+                if (speechRecognizer.State == SpeechRecognizerState.Idle) {
+                    await speechRecognizer.ContinuousRecognitionSession.StartAsync();
+                   
                 }
+
                 #endregion
             } catch (Exception ex) {
                 Result = ex.Message;
             }
             UserText = Result;
+        }
+
+        private void ContinuousRecognitionSession_Completed(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionCompletedEventArgs args) {
+            throw new NotImplementedException();
         }
 
         private void ContinuousRecognitionSession_ResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) {
