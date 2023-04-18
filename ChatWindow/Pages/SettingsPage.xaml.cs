@@ -28,17 +28,8 @@ namespace ChatWindow.Pages {
     public sealed partial class SettingsPage : Page {
         public SettingsPage() {
             this.InitializeComponent();
-            switch (MainWindow.Grid.RequestedTheme) {
-                case ElementTheme.Default:
-                    themeMode.SelectedIndex = 2;
-                    break;
-                case ElementTheme.Light:
-                    themeMode.SelectedIndex = 1;
-                    break;
-                case ElementTheme.Dark:
-                    themeMode.SelectedIndex = 0;
-                    break;
-            }
+            themeMode.SelectedIndex = AppClasses.AppSettings.ThemesIndex;
+            
         }
         /// <summary>
         /// 根据选择<see langword="selectedTheme"/>的种类，改变系统的主题模式<see cref="ElementTheme"/> 对应的<see cref="ElementTheme.Default"/>枚举选择
@@ -55,6 +46,7 @@ namespace ChatWindow.Pages {
                 } else {
                     MainWindow.Grid.RequestedTheme = ElementTheme.Default;
                 }
+                AppClasses.AppSettings.ThemesIndex = themeMode.SelectedIndex;
             }
         }
     }

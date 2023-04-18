@@ -35,8 +35,18 @@ namespace ChatWindow {
             MyFrame.SourcePageType = typeof(ChatPage);
             navigation.SelectedItem = 0;
             Grid = mainGird;
+            Grid.Loaded += Grid_Loaded;
         }
 
+        private void Grid_Loaded(object sender, RoutedEventArgs e) {
+            if (AppClasses.AppSettings.ThemesIndex == 0) {
+                MainWindow.Grid.RequestedTheme = ElementTheme.Light;
+            } else if (AppClasses.AppSettings.ThemesIndex == 1) {
+                MainWindow.Grid.RequestedTheme = ElementTheme.Dark;
+            } else {
+                MainWindow.Grid.RequestedTheme = ElementTheme.Default;
+            }
+        }
 
         public static Grid Grid { get; set; }
         private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args) {
