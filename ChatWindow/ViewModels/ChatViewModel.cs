@@ -1,16 +1,27 @@
 ﻿using ChatWindow.Helper;
 using ChatWindow.Models;
+using ChatWindow.Models.Translation;
+using ChatWindow.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using Windows.Media.SpeechRecognition;
+using Windows.Storage.Pickers;
 using Windows.UI.Core;
+using WinRT;
 using static ChatWindow.Helper.ApiHelper;
 
 namespace ChatWindow.ViewModels {
@@ -19,7 +30,6 @@ namespace ChatWindow.ViewModels {
             this.dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
             this.speechRecognizer = new SpeechRecognizer();
         }
-
         private SpeechRecognizer speechRecognizer;
         private StringBuilder dictatedTextBuilder;
         private Microsoft.UI.Dispatching.DispatcherQueue dispatcher;
@@ -33,6 +43,8 @@ namespace ChatWindow.ViewModels {
             OnSendAsync();
 
         }
+
+     
 
         [RelayCommand]
         private void OnMessageEnterSend(KeyRoutedEventArgs args) {
@@ -55,7 +67,6 @@ namespace ChatWindow.ViewModels {
                 UIMessage AiMessage = new UIMessage();
                 AiMessage.From = MessageType.AiInput;
                 MessagesList.Add(AiMessage);
-                // myMessage.ProgressIsActive = true;
 
 
                 var result = await apiHelper.GetStreamResult(text, (appendText) => {
@@ -96,7 +107,7 @@ namespace ChatWindow.ViewModels {
 
                 #region 第二种方式
                 SpeechRecognitionCompilationResult result =
-      await speechRecognizer.CompileConstraintsAsync();
+                await speechRecognizer.CompileConstraintsAsync();
                 speechRecognizer.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
                 speechRecognizer.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
                 if (speechRecognizer.State == SpeechRecognizerState.Idle) {

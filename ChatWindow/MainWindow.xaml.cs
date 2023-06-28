@@ -36,7 +36,10 @@ namespace ChatWindow {
             navigation.SelectedItem = 0;
             Grid = mainGird;
             Grid.Loaded += Grid_Loaded;
+            Instance = this;
         }
+
+        public static MainWindow Instance { get; private set; }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e) {
             if (AppClasses.AppSettings.ThemesIndex == 0) {
@@ -52,13 +55,15 @@ namespace ChatWindow {
         private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args) {
             if (args.InvokedItem.ToString() == "ChatEntrance") {
                 MyFrame.SourcePageType = typeof(ChatPage);
-            } else if (args.InvokedItem.ToString()=="…Ë÷√") {
+            } else if (args.InvokedItem.ToString() == "…Ë÷√") {
                 MyFrame.SourcePageType = typeof(SettingsPage);
+            } else if (args.InvokedItem.ToString() == "Translation") {
+                MyFrame.SourcePageType = typeof(TranslationPage);
             } else {
                 MyFrame.SourcePageType = typeof(HomePage);
             }
         }
 
-        
+
     }
 }

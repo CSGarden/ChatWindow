@@ -19,7 +19,6 @@
     x:Name="s"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-
     <Page.DataContext>
         <viewmodel:ChatViewModel />
     </Page.DataContext>
@@ -108,7 +107,7 @@
                             Padding="25,9"
                             VerticalAlignment="Center"
                             AutomationProperties.Name="customized TextBox"
-                            Background="#cc36341f"
+                            Background="LightGray"
                             CharacterSpacing="120"
                             CodeBackground="Transparent"
                             CodeFontFamily="ËÎÌו"
@@ -144,7 +143,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition Height="auto" MinHeight="50" />
+                <RowDefinition Height="auto" MinHeight="90" />
             </Grid.RowDefinitions>
             <ListView
                 Grid.Row="0"
@@ -177,6 +176,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox
                         x:Name="input"
@@ -190,7 +190,7 @@
                         CharacterSpacing="100"
                         FontSize="14"
                         Text="{Binding UserText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                        TextWrapping="NoWrap">
+                        TextWrapping="Wrap">
                         <i:Interaction.Behaviors>
                             <i:BehaviorCollection>
                                 <core:EventTriggerBehavior EventName="KeyDown">
@@ -199,11 +199,12 @@
                             </i:BehaviorCollection>
                         </i:Interaction.Behaviors>
                     </TextBox>
+                  
                     <Button
                         x:Uid="SpeechInput"
-                        Grid.Column="1"
+                        Grid.Column="2"
                         Height="40"
-                        MinWidth="100"
+                        MinWidth="50"
                         Margin="0,0,10,0"
                         Padding="10,5"
                         HorizontalAlignment="Center"
@@ -211,13 +212,14 @@
                         CharacterSpacing="100"
                         Command="{Binding SpeechRecognitionCommand}"
                         FontSize="16"
-                        Style="{StaticResource AccentButtonStyle}" />
+                        Style="{StaticResource AccentButtonStyle}"
+                        Visibility="Collapsed" />
                     <Button
                         x:Name="sendBtn"
                         x:Uid="SendBtn"
-                        Grid.Column="2"
-                        Width="100"
+                        Grid.Column="3"
                         Height="40"
+                        MinWidth="50"
                         Margin="0,10,5,10"
                         Padding="22,9"
                         HorizontalAlignment="Right"

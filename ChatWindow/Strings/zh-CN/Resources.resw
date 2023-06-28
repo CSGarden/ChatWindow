@@ -132,4 +132,7 @@
   <data name="TextBlockCopied.Text" xml:space="preserve">
     <value>复制成功</value>
   </data>
+  <data name="XmlInput.Content" xml:space="preserve">
+    <value>识别xml文本</value>
+  </data>
 </root>

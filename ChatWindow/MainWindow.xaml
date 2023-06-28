@@ -37,7 +37,7 @@
             ItemInvoked="NavigationView_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="ChatEntrance" Icon="Zoom" />
-                <NavigationViewItem Content="22">
+                <NavigationViewItem Content="Translation">
                     <NavigationViewItem.Icon>
                         <SymbolIcon Symbol="VideoChat" />
                     </NavigationViewItem.Icon>

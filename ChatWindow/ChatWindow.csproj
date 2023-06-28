@@ -23,6 +23,7 @@
     <None Remove="Pages\ChatPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
+    <None Remove="Pages\TranslationPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,6 +68,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\yuyin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\TranslationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\SettingsPage.xaml">
