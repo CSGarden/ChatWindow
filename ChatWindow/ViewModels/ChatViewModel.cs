@@ -52,6 +52,9 @@ namespace ChatWindow.ViewModels {
                 myMessage.From = MessageType.Input;
                 MessagesList.Add(myMessage);
                 myMessage.ProgressIsVisibility = Visibility.Visible;
+                UIMessage AiMessage = new UIMessage();
+                AiMessage.From = MessageType.AiInput;
+                MessagesList.Add(AiMessage);
                 // myMessage.ProgressIsActive = true;
 
 

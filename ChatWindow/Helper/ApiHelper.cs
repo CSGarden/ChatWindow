@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Windows.Media.Protection.PlayReady;
 
 namespace ChatWindow.Helper {
     public class ApiHelper {
@@ -22,6 +23,7 @@ namespace ChatWindow.Helper {
             public int status { get; set; }
             public ApowersoftResultData data { get; set; }
         }
+
         public class ApowersoftResultData {
             public string text { get; set; }
             public string conversation_id { get; set; }

@@ -22,6 +22,7 @@
     <None Remove="Images\yuyin.svg" />
     <None Remove="Pages\ChatPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
+    <None Remove="Pages\SettingsPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,13 +37,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+    <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.18" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0-preview2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Markdown" Version="7.1.2" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230118.102" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
-    <PackageReference Include="System.Net.Http.Json" Version="8.0.0-preview.1.23110.8" />
-    <PackageReference Include="System.Speech" Version="8.0.0-preview.1.23110.8" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230331000" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25336-preview" />
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0-preview.3.23174.8" />
+    <PackageReference Include="System.Speech" Version="8.0.0-preview.3.23174.8" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -64,6 +67,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\yuyin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\ChatPage.xaml">
