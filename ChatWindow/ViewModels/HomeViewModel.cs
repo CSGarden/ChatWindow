@@ -26,11 +26,10 @@ namespace ChatWindow.ViewModels {
             myMessage.From = MessageType.Input;
             MessagesList.Add(myMessage);
             UIMessage AiMessage = new UIMessage();
-            AiMessage.Message = result.text;
             AiMessage.From = MessageType.AiInput;
             MessagesList.Add(AiMessage);
             var result = await apiHelper.GetStreamResult(text, new Action<string>((e) => { AiMessage.Message += e; }));
-            AiMessage.Message = result;
+            AiMessage.Message = result.text;
         }
     }
 }

@@ -58,11 +58,6 @@ namespace ChatWindow.ViewModels {
                 // myMessage.ProgressIsActive = true;
 
 
-                UIMessage AiMessage = new UIMessage();
-                AiMessage.From = MessageType.AiInput;
-                MessagesList.Add(AiMessage);
-
-
                 var result = await apiHelper.GetStreamResult(text, (appendText) => {
                     dispatcher.TryEnqueue(() => {
                         AiMessage.Message += appendText;
