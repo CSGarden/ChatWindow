@@ -38,7 +38,7 @@ namespace ChatWindow.Pages
             {
                 var name = (item as ApowersoftItem).Name;
                 var value = (item as ApowersoftItem).Value;
-                xml += $"<item name=\"{name}\">{value}</item>\r\n"
+                xml += $"<item name=\"{name}\">{value}</item>\r\n";
             }
         }
     }
