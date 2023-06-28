@@ -6,21 +6,23 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.SpeechRecognition;
 using Windows.UI.Core;
+using static ChatWindow.Helper.ApiHelper;
 
 namespace ChatWindow.ViewModels {
     public partial class ChatViewModel : ObservableObject {
-        //public ChatViewModel() {
-        //    // this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-        //    this.speechRecognizer = new SpeechRecognizer();
-        //}
+        public ChatViewModel() {
+            this.dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            this.speechRecognizer = new SpeechRecognizer();
+        }
 
         private SpeechRecognizer speechRecognizer;
         private StringBuilder dictatedTextBuilder;
-        private CoreDispatcher dispatcher;
+        private Microsoft.UI.Dispatching.DispatcherQueue dispatcher;
 
         [ObservableProperty]
         private ObservableCollection<UIMessage> messagesList = new ObservableCollection<UIMessage>();
@@ -38,6 +40,7 @@ namespace ChatWindow.ViewModels {
                 OnSendAsync();
             }
         }
+        private ApowersoftResultData lastMessage = null;
 
         private async Task OnSendAsync() {
             if (!string.IsNullOrEmpty(userText)) {
@@ -50,14 +53,23 @@ namespace ChatWindow.ViewModels {
                 MessagesList.Add(myMessage);
                 myMessage.ProgressIsVisibility = Visibility.Visible;
                 // myMessage.ProgressIsActive = true;
-                var result = await apiHelper.GetResults(text);
+
+
+                UIMessage AiMessage = new UIMessage();
+                AiMessage.From = MessageType.AiInput;
+                MessagesList.Add(AiMessage);
+
+
+                var result = await apiHelper.GetStreamResult(text, (appendText) => {
+                    dispatcher.TryEnqueue(() => {
+                        AiMessage.Message += appendText;
+                    });
+                }, lastData: lastMessage);
                 myMessage.ProgressIsVisibility = Visibility.Collapsed;
                 //myMessage.ProgressIsActive = false;
 
-                UIMessage AiMessage = new UIMessage();
-                AiMessage.Message = result;
-                AiMessage.From = MessageType.AiInput;
-                MessagesList.Add(AiMessage);
+                AiMessage.Message = result.text;
+                lastMessage = result;
             }
         }
 
@@ -91,7 +103,7 @@ namespace ChatWindow.ViewModels {
                 speechRecognizer.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
                 if (speechRecognizer.State == SpeechRecognizerState.Idle) {
                     await speechRecognizer.ContinuousRecognitionSession.StartAsync();
-                   
+
                 }
 
                 #endregion

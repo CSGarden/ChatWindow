@@ -27,7 +27,7 @@ namespace ChatWindow.ViewModels {
             MessagesList.Add(myMessage);
             var result = await apiHelper.GetResults(text);
             UIMessage AiMessage = new UIMessage();
-            AiMessage.Message = result;
+            AiMessage.Message = result.text;
             AiMessage.From = MessageType.AiInput;
             MessagesList.Add(AiMessage);
         }
