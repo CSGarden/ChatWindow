@@ -32,14 +32,40 @@ namespace ChatWindow.Pages
         }
 
         private void list_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            var selectedItems = ((ListView)sender).SelectedItems;
-            string xml = "";
-            foreach (var item in selectedItems)
-            {
-                var name = (item as ApowersoftItem).Name;
-                var value = (item as ApowersoftItem).Value;
-                xml += $"<item name=\"{name}\">{value}</item>\r\n";
-            }
+            btnOk.Visibility=list.SelectedItems.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
+
+
+        //private void SelectAll_Checked(object sender, RoutedEventArgs e) {
+        //    TwCheckBox.IsChecked = DeCheckBox.IsChecked =FrCheckBox.IsChecked = EnCheckBox.IsChecked = JpCheckBox.IsChecked = PtCheckBox.IsChecked = PtCheckBox.IsChecked = EsCheckBox.IsChecked = true;
+        //}
+
+        //private void SelectAll_Unchecked(object sender, RoutedEventArgs e) {
+        //    TwCheckBox.IsChecked = DeCheckBox.IsChecked = FrCheckBox.IsChecked = EnCheckBox.IsChecked = JpCheckBox.IsChecked = PtCheckBox.IsChecked = PtCheckBox.IsChecked = EsCheckBox.IsChecked = false;
+        //}
+
+        //private void Option_Unchecked(object sender, RoutedEventArgs e) {
+        //    SetCheckedState();
+        //}
+
+        //private void SelectAll_Indeterminate(object sender, RoutedEventArgs e) {
+        //    if (TwCheckBox.IsChecked == true && DeCheckBox.IsChecked == true && FrCheckBox.IsChecked == true && EnCheckBox.IsChecked == true && JpCheckBox.IsChecked == true && PtCheckBox.IsChecked == true && PtCheckBox.IsChecked == true && EsCheckBox.IsChecked == true) {
+        //        OptionsAllCheckBox.IsChecked = false;
+        //    }
+        //}
+
+        //private void Option_Checked(object sender, RoutedEventArgs e) {
+        //    SetCheckedState();
+        //}
+
+        //private void SetCheckedState() {
+        //    if (TwCheckBox.IsChecked == true && DeCheckBox.IsChecked == true && FrCheckBox.IsChecked == true && EnCheckBox.IsChecked == true && JpCheckBox.IsChecked == true && PtCheckBox.IsChecked == true && PtCheckBox.IsChecked == true && EsCheckBox.IsChecked == true) {
+        //        OptionsAllCheckBox.IsChecked = true;
+        //    } else if (TwCheckBox.IsChecked == false && DeCheckBox.IsChecked == false && FrCheckBox.IsChecked == false && EnCheckBox.IsChecked == false && JpCheckBox.IsChecked == false && PtCheckBox.IsChecked == false && PtCheckBox.IsChecked == false && EsCheckBox.IsChecked == false) {
+        //        OptionsAllCheckBox.IsChecked = false;
+        //    } else {
+        //        OptionsAllCheckBox.IsChecked = null;
+        //    }
+        //}
     }
 }

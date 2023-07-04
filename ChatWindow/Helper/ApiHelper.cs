@@ -45,33 +45,32 @@ namespace ChatWindow.Helper {
         public async Task<ApowersoftResultData> GetResults(string inputText, ApowersoftResultData lastData = null) {
             var result = new ApowersoftResultData();
 
-            var form = new MultipartFormDataContent();
-            form.Add(new StringContent(inputText), "prompt");
-            form.Add(new StringContent("1"), "sync");
-            if (lastData != null) {
-                form.Add(new StringContent(lastData.conversation_id), "conversation_id");
-                form.Add(new StringContent(lastData.msg_id), "prev_msg_id");
-            }
-            try {
-                var response = await client.PostAsync(url, form);
-                var resultResponse = await response.Content.ReadFromJsonAsync<ApowersoftResult>();
-                if (resultResponse?.data != null) {
-                    result = resultResponse.data;
-                }
-            } catch (System.Exception) {
+            var taskId = await CreateTask(inputText, false, lastData);
+            if (string.IsNullOrEmpty(taskId)) {
                 result.text = "暂时没有思绪呢~ ε=ε=ε=ε=ε=ε=┌(;￣◇￣)┘  (｡￫‿￩｡) （๑￫‿ฺ￩๑）（=ˇωˇ=）（⺻▽⺻ ）<(￣︶￣)>(•‾̑⌣‾̑•)✧˖° (๑˘ ˘๑)  ♥(｡￫v￩｡)♥";
             }
+            var data = await QueryTask(taskId);
+            result = JsonSerializer.Deserialize<ApowersoftResult>(data).data;
+            var count = 1;
+            while (result.state != 1 && count < 100) {
+                data = await QueryTask(taskId);
+                result = JsonSerializer.Deserialize<ApowersoftResult>(data).data;
+                await Task.Delay(100);
+                count++;
+            }
+
+
             return result;
         }
 
         public async Task<ApowersoftResultData> GetStreamResult(string inputText, Action<string> append, ApowersoftResultData lastData = null) {
             var result = new ApowersoftResultData();
 
-            var taskId = await CreateTask(inputText, lastData);
+            var taskId = await CreateTask(inputText, true, lastData);
             if (string.IsNullOrEmpty(taskId)) {
                 result.text = "暂时没有思绪呢~ ε=ε=ε=ε=ε=ε=┌(;￣◇￣)┘  (｡￫‿￩｡) （๑￫‿ฺ￩๑）（=ˇωˇ=）（⺻▽⺻ ）<(￣︶￣)>(•‾̑⌣‾̑•)✧˖° (๑˘ ˘๑)  ♥(｡￫v￩｡)♥";
             }
-            var streamReader = await QueryTask(taskId);
+            var streamReader = await QueryTaskBySteam(taskId);
 
             while (true && streamReader != null) {
                 var line = await streamReader.ReadLineAsync();
@@ -91,10 +90,13 @@ namespace ChatWindow.Helper {
             return result;
         }
 
-        private async Task<string> CreateTask(string inputText, ApowersoftResultData lastData = null) {
+        private async Task<string> CreateTask(string inputText, bool isStream, ApowersoftResultData lastData = null) {
             var form = new MultipartFormDataContent();
             form.Add(new StringContent(inputText), "prompt");
-            form.Add(new StringContent("1"), "response_type");
+
+            if (isStream) {
+                form.Add(new StringContent("1"), "response_type");
+            }
             if (lastData != null) {
                 form.Add(new StringContent(lastData.conversation_id), "conversation_id");
                 form.Add(new StringContent(lastData.msg_id), "prev_msg_id");
@@ -108,7 +110,7 @@ namespace ChatWindow.Helper {
             }
         }
 
-        private async Task<StreamReader> QueryTask(string id) {
+        private async Task<StreamReader> QueryTaskBySteam(string id) {
             var request = new HttpRequestMessage(HttpMethod.Get, url + id) {
                 Headers = {
                     {"Accept", "text/event-stream" }
@@ -119,6 +121,15 @@ namespace ChatWindow.Helper {
                 var stream = response.Content.ReadAsStream();
                 var reader = new StreamReader(stream);
                 return reader;
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+
+        private async Task<string> QueryTask(string id) {
+
+            try {
+                return await client.GetStringAsync(url + id);
             } catch (Exception ex) {
                 return null;
             }

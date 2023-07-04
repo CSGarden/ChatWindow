@@ -120,6 +120,12 @@
   <data name="AppTitleTextBlock.Text" xml:space="preserve">
     <value>ChatGPT</value>
   </data>
+  <data name="LanguageSelection.Header" xml:space="preserve">
+    <value>语言选择</value>
+  </data>
+  <data name="Ok.Content" xml:space="preserve">
+    <value>确定</value>
+  </data>
   <data name="ProblemInput.PlaceholderText" xml:space="preserve">
     <value>请输入问题~</value>
   </data>
