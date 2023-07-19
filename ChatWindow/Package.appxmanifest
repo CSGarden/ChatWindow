@@ -7,7 +7,7 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="b94a8778-e68c-45d8-a96d-5bad9751015b"
+    Name="ChatWindow"
     Publisher="CN=chen"
     Version="1.0.0.0" />
 

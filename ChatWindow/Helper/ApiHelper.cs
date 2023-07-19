@@ -1,4 +1,5 @@
 ﻿using ABI.System;
+using ChatWindow.AppClasses;
 using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Diagnostics;
@@ -42,10 +43,9 @@ namespace ChatWindow.Helper {
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("X-API-KEY", apiKey);
         }
-        private async Task Initialize() {
-            ConfigManager configManager = new ConfigManager();
-            url = await configManager.GetApiUrlAsync();
-            apiKey =await configManager.GetApiKeyAsync();
+        private void Initialize() {
+            url = AppSettings.URL;
+            apiKey = AppSettings.Key;
         }
         public async Task<ApowersoftResultData> GetResults(string inputText, ApowersoftResultData lastData = null) {
             var result = new ApowersoftResultData();
