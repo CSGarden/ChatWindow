@@ -44,6 +44,10 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <ProgressRing
+                Background="Purple"
+                IsActive="True"
+                Visibility="{Binding IsVisibility}" />
             <Border Grid.Row="1" BorderThickness="0,1,0,0">
                 <Grid>
                     <Grid.ColumnDefinitions>

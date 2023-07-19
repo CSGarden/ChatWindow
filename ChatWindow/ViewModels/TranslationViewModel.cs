@@ -3,6 +3,7 @@ using ChatWindow.Models;
 using ChatWindow.Models.Translation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
 using System;
@@ -28,6 +29,9 @@ namespace ChatWindow.ViewModels {
         private bool isAllChecked;
         [ObservableProperty]
         private ObservableCollection<UIMessage> msList = new ObservableCollection<UIMessage>();
+
+        [ObservableProperty]
+        private Visibility isVisibility = Visibility.Collapsed;
 
         [ObservableProperty]
         private ObservableCollection<LangItem> langItems;
@@ -119,16 +123,13 @@ namespace ChatWindow.ViewModels {
                 if (IsAllChecked) {
                     questionText = string.Format("将xml文档翻译成{0}，并将结果按照翻译语言为key，翻译结果xml为值(一定要保证源xml的标签格式)以json格式返回给我，请注意不要有其他任何的提示词，以及不要用markdown语法，我需要纯文本，这是需要翻译的xml文档：{1}", string.Join(" ", lang), chatText);
                 }
+                IsVisibility=Visibility.Visible;
                 var result = await apiHelper.GetResults(questionText);
                 var text = result.text;
+                IsVisibility = Visibility.Collapsed;
                 Dictionary<string, string> dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(text);
                 try {
                     foreach (KeyValuePair<string, string> entry in dictionary) {
-                        //XDocument doc = new XDocument(
-                        //    new XElement("Apowersoft",
-                        //        new XElement(entry.Value)
-                        //    )
-                        //);
                         // 创建XmlDocument对象
                         XmlDocument doc = new XmlDocument();
                         // 创建主标签
@@ -150,6 +151,14 @@ namespace ChatWindow.ViewModels {
             }
         }
 
+        private async void ShowSaveSuccessDialog() {
+            ContentDialog saveSuccessDialog = new ContentDialog() {
+                Title = "保存成功",
+                Content = "您的数据已经成功保存。",
+                CloseButtonText = "确定"
+            };
 
+            await saveSuccessDialog.ShowAsync();
+        }
     }
 }

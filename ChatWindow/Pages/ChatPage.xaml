@@ -170,6 +170,7 @@
                     <selector:ChatTemplateSelector AiInputTemplate="{StaticResource chatAiInput}" InputTemplate="{StaticResource chatInput}" />
                 </ListView.ItemTemplateSelector>
             </ListView>
+          
             <Border Grid.Row="1" BorderThickness="0,1,0,0">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
@@ -199,7 +200,7 @@
                             </i:BehaviorCollection>
                         </i:Interaction.Behaviors>
                     </TextBox>
-                  
+
                     <Button
                         x:Uid="SpeechInput"
                         Grid.Column="2"

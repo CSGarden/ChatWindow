@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Shapes;
+﻿using ABI.System;
+using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Media.Protection.PlayReady;
+using static ChatWindow.App;
 
 namespace ChatWindow.Helper {
     public class ApiHelper {
@@ -32,19 +34,21 @@ namespace ChatWindow.Helper {
             public string task_id { get; set; }
         }
 
-
+        private string url;
+        private string apiKey;
+        private HttpClient client;
         public ApiHelper() {
+            Initialize();
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("X-API-KEY", apiKey);
         }
-
-        private string url = "https://aw.aoscdn.com/tech/tasks/gpt/completion/";
-        private string apiKey = "wxo20k7zpw293rjbr";
-        private HttpClient client;
-
+        private async Task Initialize() {
+            ConfigManager configManager = new ConfigManager();
+            url = await configManager.GetApiUrlAsync();
+            apiKey =await configManager.GetApiKeyAsync();
+        }
         public async Task<ApowersoftResultData> GetResults(string inputText, ApowersoftResultData lastData = null) {
             var result = new ApowersoftResultData();
-
             var taskId = await CreateTask(inputText, false, lastData);
             if (string.IsNullOrEmpty(taskId)) {
                 result.text = "暂时没有思绪呢~ ε=ε=ε=ε=ε=ε=┌(;￣◇￣)┘  (｡￫‿￩｡) （๑￫‿ฺ￩๑）（=ˇωˇ=）（⺻▽⺻ ）<(￣︶￣)>(•‾̑⌣‾̑•)✧˖° (๑˘ ˘๑)  ♥(｡￫v￩｡)♥";
@@ -121,7 +125,7 @@ namespace ChatWindow.Helper {
                 var stream = response.Content.ReadAsStream();
                 var reader = new StreamReader(stream);
                 return reader;
-            } catch (Exception ex) {
+            } catch (System.Exception ex) {
                 return null;
             }
         }
@@ -130,7 +134,7 @@ namespace ChatWindow.Helper {
 
             try {
                 return await client.GetStringAsync(url + id);
-            } catch (Exception ex) {
+            } catch (System.Exception ex) {
                 return null;
             }
         }

@@ -46,6 +46,7 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230331000" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25336-preview" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="System.Net.Http.Json" Version="8.0.0-preview.3.23174.8" />
     <PackageReference Include="System.Speech" Version="8.0.0-preview.3.23174.8" />
     <Manifest Include="$(ApplicationManifest)" />
