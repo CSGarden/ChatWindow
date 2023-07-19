@@ -12,7 +12,8 @@ namespace ChatWindow.AppClasses {
     public static class AppSettings {
         private static ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         private static int themesIndex = 2;
-
+        public static string URL { get; set; }
+        public static string Key { get; set; }
         public static async Task Init() {
             var AppDataFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
             string configPath = Path.Combine(AppDataFolder.Path, "Config.ini");
@@ -25,8 +26,7 @@ namespace ChatWindow.AppClasses {
             URL = await configManager.GetApiUrlAsync();
             Key = await configManager.GetApiKeyAsync();
         }
-        public static string URL { get; set; }
-        public static string Key { get; set; }
+       
 
         public static int ThemesIndex {
             get {
