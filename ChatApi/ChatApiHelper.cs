@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -124,7 +125,8 @@ namespace ChatApi {
                 var result = JsonConvert.DeserializeObject<ApowersoftTask>(await response.Content.ReadAsStringAsync());
                 return result.data.task_id;
             }
-            catch (System.Exception) {
+            catch (System.Exception ex) {
+                Debug.WriteLine(ex);
                 return string.Empty;
             }
         }
@@ -142,6 +144,7 @@ namespace ChatApi {
                 return reader;
             }
             catch (Exception ex) {
+                Debug.WriteLine(ex);
                 return null;
             }
         }
@@ -152,6 +155,7 @@ namespace ChatApi {
                 return await client.GetStringAsync(url + id);
             }
             catch (Exception ex) {
+                Debug.WriteLine(ex);
                 return null;
             }
         }

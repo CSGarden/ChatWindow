@@ -58,8 +58,8 @@ namespace ChatWindow.ViewModels {
         private ApowersoftResultData lastMessage = null;
 
         private async Task OnSendAsync() {
-            if (!string.IsNullOrEmpty(userText)) {
-                var text = userText;
+            if (!string.IsNullOrEmpty(UserText)) {
+                var text = UserText;
                 UserText = "";
                 UIMessage myMessage = new UIMessage();
                 myMessage.Message = text;

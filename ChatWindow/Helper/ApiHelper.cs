@@ -12,6 +12,7 @@ using Windows.Media.Protection.PlayReady;
 using static ChatWindow.App;
 
 namespace ChatWindow.Helper {
+    [Obsolete]
     public class ApiHelper {
         public class ApowersoftTaskData {
             public string task_id { get; set; }
@@ -125,7 +126,7 @@ namespace ChatWindow.Helper {
                 var stream = response.Content.ReadAsStream();
                 var reader = new StreamReader(stream);
                 return reader;
-            } catch (System.Exception ex) {
+            } catch (System.Exception) {
                 return null;
             }
         }
@@ -134,7 +135,7 @@ namespace ChatWindow.Helper {
 
             try {
                 return await client.GetStringAsync(url + id);
-            } catch (System.Exception ex) {
+            } catch (System.Exception) {
                 return null;
             }
         }
