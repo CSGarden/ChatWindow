@@ -1,19 +1,12 @@
-﻿using ABI.System;
-using ChatWindow.AppClasses;
-using Microsoft.UI.Xaml.Shapes;
+﻿using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Windows.Media.Protection.PlayReady;
-using static ChatWindow.App;
 
-namespace ChatWindow.Helper {
-    [Obsolete]
-    public class ApiHelper {
+namespace ChatApi {
+    public class ChatApiHelper {
         public class ApowersoftTaskData {
             public string task_id { get; set; }
         }
@@ -36,30 +29,50 @@ namespace ChatWindow.Helper {
             public string task_id { get; set; }
         }
 
-        private string url;
-        private string apiKey;
-        private HttpClient client;
-        public ApiHelper() {
-            Initialize();
+
+        public ChatApiHelper(ChatApiService chatApiService) {
+            this.chatApiService = chatApiService;
+            if (string.IsNullOrEmpty(chatApiService.Option.ApiKey)){
+                throw new Exception("Please set apiKey first!");
+            }
+            url = chatApiService.Option.ApiUrl;
+
             client = new HttpClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", apiKey);
+            client.DefaultRequestHeaders.Add("X-API-KEY", chatApiService.Option.ApiKey);
+            //client.DefaultRequestHeaders.Add("UserAgent", "");
         }
-        private void Initialize() {
-            url = AppSettings.URL;
-            apiKey = AppSettings.Key;
+
+
+        private string url = "";
+        private HttpClient client;
+        private ChatApiService chatApiService;
+
+        /// <summary>
+        /// 发送第一条人设 promote
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApowersoftResultData> SetFirstPromote() {
+            if (!string.IsNullOrEmpty(chatApiService?.BehaviorOption?.FirstPromote)) {
+                return await GetResults(chatApiService?.BehaviorOption?.FirstPromote);
+            }
+            else {
+                return null;
+            }
         }
+
         public async Task<ApowersoftResultData> GetResults(string inputText, ApowersoftResultData lastData = null) {
             var result = new ApowersoftResultData();
+
             var taskId = await CreateTask(inputText, false, lastData);
             if (string.IsNullOrEmpty(taskId)) {
-                result.text = "暂时没有思绪呢~ ε=ε=ε=ε=ε=ε=┌(;￣◇￣)┘  (｡￫‿￩｡) （๑￫‿ฺ￩๑）（=ˇωˇ=）（⺻▽⺻ ）<(￣︶￣)>(•‾̑⌣‾̑•)✧˖° (๑˘ ˘๑)  ♥(｡￫v￩｡)♥";
+                result.text = chatApiService.BehaviorOption.DefultErrorResponse;
             }
             var data = await QueryTask(taskId);
-            result = JsonSerializer.Deserialize<ApowersoftResult>(data).data;
+            result = JsonConvert.DeserializeObject<ApowersoftResult>(data).data;
             var count = 1;
             while (result.state != 1 && count < 100) {
                 data = await QueryTask(taskId);
-                result = JsonSerializer.Deserialize<ApowersoftResult>(data).data;
+                result = JsonConvert.DeserializeObject<ApowersoftResult>(data).data;
                 await Task.Delay(100);
                 count++;
             }
@@ -73,7 +86,7 @@ namespace ChatWindow.Helper {
 
             var taskId = await CreateTask(inputText, true, lastData);
             if (string.IsNullOrEmpty(taskId)) {
-                result.text = "暂时没有思绪呢~ ε=ε=ε=ε=ε=ε=┌(;￣◇￣)┘  (｡￫‿￩｡) （๑￫‿ฺ￩๑）（=ˇωˇ=）（⺻▽⺻ ）<(￣︶￣)>(•‾̑⌣‾̑•)✧˖° (๑˘ ˘๑)  ♥(｡￫v￩｡)♥";
+                result.text = chatApiService.BehaviorOption.DefultConnectErrorResponse;
             }
             var streamReader = await QueryTaskBySteam(taskId);
 
@@ -85,8 +98,9 @@ namespace ChatWindow.Helper {
                 if (line.StartsWith("data: ")) {
                     var data = line.Substring("data: ".Length).Trim();
                     if (data.EndsWith("}")) {
-                        result = JsonSerializer.Deserialize<ApowersoftResultData>(data);
-                    } else {
+                        result = JsonConvert.DeserializeObject<ApowersoftResultData>(data);
+                    }
+                    else {
                         append?.Invoke(data);
                     }
                 }
@@ -108,9 +122,11 @@ namespace ChatWindow.Helper {
             }
             try {
                 var response = await client.PostAsync(url, form);
-                var result = await response.Content.ReadFromJsonAsync<ApowersoftTask>();
+                var result = JsonConvert.DeserializeObject<ApowersoftTask>(await response.Content.ReadAsStringAsync());
                 return result.data.task_id;
-            } catch (System.Exception) {
+            }
+            catch (System.Exception ex) {
+                Debug.WriteLine(ex);
                 return string.Empty;
             }
         }
@@ -123,10 +139,12 @@ namespace ChatWindow.Helper {
             };
             try {
                 var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-                var stream = response.Content.ReadAsStream();
+                var stream = await response.Content.ReadAsStreamAsync();
                 var reader = new StreamReader(stream);
                 return reader;
-            } catch (System.Exception) {
+            }
+            catch (Exception ex) {
+                Debug.WriteLine(ex);
                 return null;
             }
         }
@@ -135,7 +153,9 @@ namespace ChatWindow.Helper {
 
             try {
                 return await client.GetStringAsync(url + id);
-            } catch (System.Exception) {
+            }
+            catch (Exception ex) {
+                Debug.WriteLine(ex);
                 return null;
             }
         }

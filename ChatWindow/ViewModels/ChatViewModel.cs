@@ -1,34 +1,34 @@
-﻿using ChatWindow.Helper;
+﻿using ChatApi;
 using ChatWindow.Models;
-using ChatWindow.Models.Translation;
-using ChatWindow.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using Windows.Media.SpeechRecognition;
-using Windows.Storage.Pickers;
-using Windows.UI.Core;
-using WinRT;
-using static ChatWindow.Helper.ApiHelper;
+using static ChatApi.ChatApiHelper;
 
 namespace ChatWindow.ViewModels {
     public partial class ChatViewModel : ObservableObject {
         public ChatViewModel() {
             this.dispatcher = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
             this.speechRecognizer = new SpeechRecognizer();
+
+
+            Task.Factory.StartNew(async () => {
+                lastMessage = await apiHelper.SetFirstPromote();
+
+                dispatcher.TryEnqueue(() => {
+                    UIMessage myMessage = new UIMessage();
+                    myMessage.Message = "你好~";
+                    myMessage.From = MessageType.AiInput;
+                    MessagesList.Add(myMessage);
+                });
+            });
         }
         private SpeechRecognizer speechRecognizer;
         private StringBuilder dictatedTextBuilder;
@@ -38,6 +38,9 @@ namespace ChatWindow.ViewModels {
         private ObservableCollection<UIMessage> messagesList = new ObservableCollection<UIMessage>();
         [ObservableProperty]
         private string userText;
+
+        private ChatApiHelper apiHelper = App.Services.GetService<ChatApiHelper>();
+
         [RelayCommand]
         private async void OnMessageSend() {
             OnSendAsync();
@@ -55,10 +58,9 @@ namespace ChatWindow.ViewModels {
         private ApowersoftResultData lastMessage = null;
 
         private async Task OnSendAsync() {
-            if (!string.IsNullOrEmpty(userText)) {
-                var text = userText;
+            if (!string.IsNullOrEmpty(UserText)) {
+                var text = UserText;
                 UserText = "";
-                ApiHelper apiHelper = new ApiHelper();
                 UIMessage myMessage = new UIMessage();
                 myMessage.Message = text;
                 myMessage.From = MessageType.Input;

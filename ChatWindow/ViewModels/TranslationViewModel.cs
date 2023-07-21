@@ -1,8 +1,9 @@
-﻿using ChatWindow.Helper;
+﻿using ChatApi;
 using ChatWindow.Models;
 using ChatWindow.Models.Translation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
@@ -12,14 +13,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 using Windows.Storage.Pickers;
-using Windows.UI.Popups;
-using static ChatWindow.Helper.ApiHelper;
 
 namespace ChatWindow.ViewModels {
     public partial class TranslationViewModel : ObservableObject {
@@ -119,7 +116,7 @@ namespace ChatWindow.ViewModels {
             if (!string.IsNullOrEmpty(chatText)) {
                 var questionText = "";
                 string[] lang = LangItems.Where(x => x.IsChecked).Select(x => x.LangName).ToArray();
-                ApiHelper apiHelper = new ApiHelper();
+                var apiHelper = App.Services.GetService<ChatApiHelper>();
                 if (IsAllChecked) {
                     questionText = string.Format("将xml文档翻译成{0}，并将结果按照翻译语言为key，翻译结果xml为值(一定要保证源xml的标签格式)以json格式返回给我，请注意不要有其他任何的提示词，以及不要用markdown语法，我需要纯文本，这是需要翻译的xml文档：{1}", string.Join(" ", lang), chatText);
                 }
